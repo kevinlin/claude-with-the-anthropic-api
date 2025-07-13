@@ -24,13 +24,13 @@ def main():
     try:
         # Example: Simple conversation with Claude
         message = client.messages.create(
-            model="claude-3-5-sonnet-20241022",
+            model="claude-3-5-haiku-20241022",
             max_tokens=1000,
             temperature=0.7,
             messages=[
                 {
                     "role": "user",
-                    "content": "Hello! Can you tell me a fun fact about Python programming?"
+                    "content": "What is quantum computing?"
                 }
             ]
         )
@@ -70,7 +70,7 @@ def interactive_chat():
         try:
             # Get response from Claude
             message = client.messages.create(
-                model="claude-3-5-sonnet-20241022",
+                model="claude-3-5-haiku-20241022",
                 max_tokens=1000,
                 temperature=0.7,
                 messages=conversation_history
