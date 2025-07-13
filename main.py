@@ -10,13 +10,17 @@ from anthropic import Anthropic
 # Load environment variables
 load_dotenv()
 
+# LLM Configuration Constants
+API_KEY = os.getenv("ANTHROPIC_API_KEY")
+MODEL = "claude-3-5-haiku-20241022"
+MAX_TOKENS = 1000
+TEMPERATURE = 0.7
+
 def main():
     # Initialize the Anthropic client
-    client = Anthropic(
-        api_key=os.getenv("ANTHROPIC_API_KEY")
-    )
+    client = Anthropic(api_key=API_KEY)
     
-    if not os.getenv("ANTHROPIC_API_KEY"):
+    if not API_KEY:
         print("Error: ANTHROPIC_API_KEY not found in environment variables.")
         print("Please create a .env file with your API key or set it as an environment variable.")
         return
@@ -24,9 +28,9 @@ def main():
     try:
         # Example: Simple conversation with Claude
         message = client.messages.create(
-            model="claude-3-5-haiku-20241022",
-            max_tokens=1000,
-            temperature=0.7,
+            model=MODEL,
+            max_tokens=MAX_TOKENS,
+            temperature=TEMPERATURE,
             messages=[
                 {
                     "role": "user",
@@ -43,9 +47,9 @@ def main():
 
 def interactive_chat():
     """Interactive chat function for ongoing conversation"""
-    client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+    client = Anthropic(api_key=API_KEY)
     
-    if not os.getenv("ANTHROPIC_API_KEY"):
+    if not API_KEY:
         print("Error: ANTHROPIC_API_KEY not found in environment variables.")
         return
     
@@ -70,9 +74,9 @@ def interactive_chat():
         try:
             # Get response from Claude
             message = client.messages.create(
-                model="claude-3-5-haiku-20241022",
-                max_tokens=1000,
-                temperature=0.7,
+                model=MODEL,
+                max_tokens=MAX_TOKENS,
+                temperature=TEMPERATURE,
                 messages=conversation_history
             )
             
