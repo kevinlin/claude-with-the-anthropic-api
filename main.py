@@ -16,32 +16,32 @@ MODEL = "claude-3-5-haiku-20241022"
 MAX_TOKENS = 1000
 TEMPERATURE = 0.7
 
-def main():
+conversation_history = []
+
+def single_chat():
     # Initialize the Anthropic client
     client = Anthropic(api_key=API_KEY)
-    
+
     if not API_KEY:
         print("Error: ANTHROPIC_API_KEY not found in environment variables.")
         print("Please create a .env file with your API key or set it as an environment variable.")
         return
-    
+
     try:
+        append_user_message(conversation_history, "What is quantum computing?")
+
         # Example: Simple conversation with Claude
         message = client.messages.create(
             model=MODEL,
             max_tokens=MAX_TOKENS,
             temperature=TEMPERATURE,
-            messages=[
-                {
-                    "role": "user",
-                    "content": "What is quantum computing?"
-                }
-            ]
+            messages=conversation_history
         )
-        
+
         print("Claude's response:")
         print(message.content[0].text)
-        
+        append_assistant_message(conversation_history, message.content[0].text)
+
     except Exception as e:
         print(f"Error calling Anthropic API: {e}")
 
@@ -55,9 +55,7 @@ def interactive_chat():
     
     print("Interactive Chat with Claude (type 'quit' to exit)")
     print("-" * 50)
-    
-    conversation_history = []
-    
+        
     while True:
         user_input = input("\nYou: ").strip()
         
@@ -69,7 +67,7 @@ def interactive_chat():
             continue
         
         # Add user message to history
-        conversation_history.append({"role": "user", "content": user_input})
+        append_user_message(conversation_history, user_input)
         
         try:
             # Get response from Claude
@@ -84,10 +82,16 @@ def interactive_chat():
             print(f"\nClaude: {response}")
             
             # Add Claude's response to history
-            conversation_history.append({"role": "assistant", "content": response})
+            append_assistant_message(conversation_history, response)
             
         except Exception as e:
             print(f"Error: {e}")
+
+def append_user_message(messages, text):
+    messages.append({"role": "user", "content": text})
+
+def append_assistant_message(messages, text):
+    messages.append({"role": "assistant", "content": text})
 
 if __name__ == "__main__":
     print("Anthropic API Python Project")
@@ -95,7 +99,7 @@ if __name__ == "__main__":
     
     # Run simple example
     print("\n1. Running simple example...")
-    main()
+    single_chat()
     
     # Ask if user wants interactive chat
     print("\n" + "=" * 50)
